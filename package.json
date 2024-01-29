@@ -2,7 +2,6 @@
 	"name": "onboarding-lib",
 	"version": "0.0.1",
 	"description": "An onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
-	"private": true,
 	"repository": "useflytrap/onboarding-lib",
 	"exports": {
 		".": {
@@ -69,6 +68,7 @@
 		"postcss": "^8.4.23",
 		"prettier": "^2.8.8",
 		"prettier-plugin-tailwindcss": "^0.1.13",
-		"typescript": "^5.3.3"
+		"typescript": "^5.3.3",
+		"unbuild": "^2.0.0"
 	}
 }
