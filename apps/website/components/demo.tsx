@@ -1,12 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { createOnboarding } from "onboarding-lib"
 import { toast } from "sonner"
 import { createStorage } from "unstorage"
 import localStorageDriver from "unstorage/drivers/localstorage"
 import { z } from "zod"
 
+import { useIsMounted } from "@/lib/hooks"
 import { CodeBlock } from "@/components/code-block"
 import { InstallLibraryStep } from "@/components/onboarding/install-library"
 import { OnboardingDataStep } from "@/components/onboarding/onboarding-data"
@@ -14,10 +15,22 @@ import { OnboardingSetupStep } from "@/components/onboarding/onboarding-setup"
 import { SetupDemoStep } from "@/components/onboarding/setup-demo"
 import { Subtitle } from "@/components/subtitle"
 
+import { OnboardingSkeleton } from "./onboarding-skeleton"
+import { GiveFeedbackStep } from "./onboarding/give-feedback-step"
+import { OnboardingStepCompletionStep } from "./onboarding/onboarding-step-completion"
+
 /**
  * Onboarding for taking the user through how the library works?
  */
 export const onboardingSchema = z.object({
+  disappointment: z.enum(
+    ["very-disappointed", "somewhat-disappointed", "not-disappointed"],
+    { required_error: "Please fill in your disappointment level :)" }
+  ),
+  improvements: z.string({
+    required_error: "Please help us improve ONBOARDING_LIB for you :)",
+  }),
+
   stack: z.string({
     required_error: "Please tell which software stack you are using :)",
   }),
@@ -35,27 +48,42 @@ export function Demo() {
    * Onboarding for taking the user through how the library works?
    */
 
-  const storage = createStorage({
-    driver: localStorageDriver({
-      base: "demo-onboarding",
-      localStorage: window.localStorage,
-    }),
-  })
-
   /**
+   * First a quick introduction, what is ONBOARDING_LIB?
+   *
    * Build your own onboarding (onboarding):
    * - Form validation with Zod, Shadcn UI & react-hook-form
    * - Configurable controls
    * - Onboarding state for each user is persisted using `unstorage`. Unstorage is a KV-store with support for 20+ storage drivers (including local storage, Redis, etc). Learn more.
    *  - Updates to storage is debounced
    * - `onStepCompleted` -- track the conversion funnels of your onboarding flows to notice churn points using onStepCompleted
+   *
+   * - IN the end; a `help us improve ONBOARDING_LIB for you` questionnaire with
+   * "Your answers will help us build our roadmap"
+   * - Does ONBOARDING_LIB fill all your requiremenets from an onboarding library? If not, what features do you need?
    */
+
+  const [isExploding, setIsExploding] = useState(false)
+
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (isMounted === false) {
+    return <OnboardingSkeleton />
+  }
+
+  const storage = createStorage({
+    driver: localStorageDriver({
+      base: "demo-onboarding",
+    }),
+  })
 
   const { Onboarding, Step } = createOnboarding({
     schema: onboardingSchema,
   })
-
-  const [isExploding, setIsExploding] = useState(false)
 
   return (
     <section className="space-y-4">
@@ -79,9 +107,15 @@ export function Demo() {
           <Step stepId="install-library" render={InstallLibraryStep} />
           <Step stepId="onboarding-setup" render={OnboardingSetupStep} />
           <Step
-            validateFormFields={["companySize"]}
+            validateFormFields={["stack", "language"]}
             stepId="setup-demo"
             render={SetupDemoStep}
+          />
+          <Step stepId="step-complete" render={OnboardingStepCompletionStep} />
+          <Step
+            validateFormFields={["disappointment", "improvements"]}
+            stepId="feedback"
+            render={GiveFeedbackStep}
           />
           <Step stepId="onboarding-data" render={OnboardingDataStep} />
         </Onboarding>

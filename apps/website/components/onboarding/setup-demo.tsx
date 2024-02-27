@@ -39,10 +39,14 @@ export function SetupDemoStep(
         render={({ field }) => (
           <FormItem>
             <FormLabel>Your frontend stack</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              value={field.value}
+            >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue>Select your stack</SelectValue>
+                  <SelectValue placeholder="Select your stack" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -62,10 +66,14 @@ export function SetupDemoStep(
         render={({ field }) => (
           <FormItem>
             <FormLabel>Your favorite language</FormLabel>
-            <Select onValueChange={field.onChange} defaultValue={field.value}>
+            <Select
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              value={field.value}
+            >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue>Select your language</SelectValue>
+                  <SelectValue placeholder="Select your language" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>

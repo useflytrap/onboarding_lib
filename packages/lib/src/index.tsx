@@ -1,7 +1,12 @@
 import * as React from "react"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { FormProvider, useForm, useWatch } from "react-hook-form"
+import {
+  FormProvider,
+  SubmitErrorHandler,
+  useForm,
+  useWatch,
+} from "react-hook-form"
 import { ZodSchema, z } from "zod"
 
 import { useDebounce } from "./hooks"
@@ -15,6 +20,38 @@ const OnboardingContext = createContext<OnboardingContextValue<any>>(
   {} as OnboardingContextValue<any>
 )
 
+// @todo(skoshx): move to utils
+
+function childrenWithPropsArray<T extends Record<string, any>>(
+  children: React.ReactNode
+) {
+  return Array.isArray(children)
+    ? (children as React.ReactElement<T>[])
+    : [children as React.ReactElement<T>]
+}
+
+async function getComputedMarkAsCompleted<T extends ZodSchema>(
+  markAsCompleted: Exclude<
+    OnboardingStepProps<T>["markAsCompleted"],
+    undefined
+  >,
+  formValues: z.infer<T>
+) {
+  let computedMarkAsCompleted = false
+  if (markAsCompleted === true || markAsCompleted === false) {
+    computedMarkAsCompleted = markAsCompleted
+  } else {
+    try {
+      computedMarkAsCompleted = await markAsCompleted(formValues)
+    } catch {}
+  }
+  return computedMarkAsCompleted
+}
+
+/* const childrenAsArray = (children: React.ReactNode) => {
+  return Array.isArray(children) ? children as React.ReactElement<T>[] : [children];
+} */
+
 function Onboarding<T extends ZodSchema>({
   schema,
   defaultValues,
@@ -24,6 +61,7 @@ function Onboarding<T extends ZodSchema>({
   id,
   storageDebounceDelay = 500,
   onCompleted,
+  onInvalid,
 }: OnboardingProps<T>) {
   const STEPS = Array.isArray(children)
     ? children?.map((c) => c.props.stepId)
@@ -37,6 +75,7 @@ function Onboarding<T extends ZodSchema>({
 
   const [currentStep, setCurrentStep] = useState(0)
   const [currentStepId, setStepId] = useState(STEPS[currentStep])
+  const [completedStepIds, setCompletedStepIds] = useState<string[]>([])
   const [hasLoaded, setHasLoaded] = useState(false)
 
   const form = useForm<z.infer<typeof schema>>({
@@ -55,15 +94,62 @@ function Onboarding<T extends ZodSchema>({
   }, [currentStep, hasLoaded])
 
   useEffect(() => {
+    if (hasLoaded) {
+      storage.setItem(`${userId}:completed_marks`, completedStepIds)
+    }
+  }, [completedStepIds, hasLoaded])
+
+  useEffect(() => {
     async function fetchOnboardingState() {
-      const formValues = await storage.getItem<string>(userId)
+      const formValues = await storage.getItem<Record<string, any>>(userId)
       const currentStep = await storage.getItem<number>(`${userId}:step`)
+      let completedMarks =
+        (await storage.getItem<string[]>(`${userId}:completed_marks`)) ?? []
       if (formValues) {
         for (const [key, value] of Object.entries(formValues)) {
           // @ts-expect-error
           form.setValue(key, value)
         }
       }
+      // Go through `markAsCompleted` functions for all steps
+      const markAsCompletedFunctionMap = childrenWithPropsArray<
+        OnboardingStepProps<T>
+      >(children)
+        .filter((c) => c.props.markAsCompleted !== undefined)
+        .map((c) => ({
+          stepId: c.props.stepId,
+          markAsCompleted: c.props.markAsCompleted!,
+        }))
+
+      for (let i = 0; i < markAsCompletedFunctionMap.length; i++) {
+        const { stepId, markAsCompleted } = markAsCompletedFunctionMap[i]
+        const computedMarkAsCompleted = await getComputedMarkAsCompleted(
+          markAsCompleted,
+          formValues
+        )
+
+        // Reconcile the `computedMarkAsCompleted` and the saved `completedMarks`
+        if (
+          completedMarks.includes(stepId) &&
+          computedMarkAsCompleted === false
+        ) {
+          // Remove the stepId from completed marks
+          completedMarks = completedMarks.filter(
+            (predicateStepId) => predicateStepId !== stepId
+          )
+        }
+
+        if (
+          !completedMarks.includes(stepId) &&
+          computedMarkAsCompleted === true
+        ) {
+          completedMarks.push(stepId)
+        }
+      }
+
+      // Save our completed steps
+      setCompletedStepIds(completedMarks)
+
       if (currentStep) {
         setCurrentStep(currentStep)
       }
@@ -86,14 +172,6 @@ function Onboarding<T extends ZodSchema>({
     }
   }, [debouncedFormValues, hasLoaded])
 
-  function onSubmit(data: z.infer<typeof schema>) {
-    onCompleted?.(data)
-  }
-
-  function onInvalid(x: any) {
-    console.log("invalid")
-  }
-
   const previous = useMemo(() => {
     if (currentStep <= 0) return undefined
 
@@ -102,7 +180,17 @@ function Onboarding<T extends ZodSchema>({
 
   const next = useMemo(() => {
     if (currentStep >= STEPS.length - 1) return undefined
-    return () => setCurrentStep((step) => step + 1)
+    return (skipped?: boolean) => {
+      if (skipped === undefined) {
+        const currentStepId = STEPS[currentStep]
+        setCompletedStepIds((completedStepIds) => {
+          const completedStepIdsSet = new Set(completedStepIds)
+          completedStepIdsSet.add(currentStepId)
+          return Array.from(completedStepIdsSet)
+        })
+      }
+      setCurrentStep((step) => step + 1)
+    }
   }, [currentStep])
 
   const goto = (stepId: string) => {
@@ -132,10 +220,13 @@ function Onboarding<T extends ZodSchema>({
         form,
         currentStepId,
         onCompleted,
+        completedStepIds,
       }}
     >
       <FormProvider {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
+        <form
+          onSubmit={form.handleSubmit(onCompleted ?? (() => {}), onInvalid)}
+        >
           {children}
         </form>
       </FormProvider>
@@ -147,6 +238,8 @@ function OnboardingStep<T extends ZodSchema>({
   stepId,
   skippable = true,
   validateFormFields,
+  markAsCompleted,
+  onMarkAsCompletedFailed,
   onStepCompleted,
   render,
 }: OnboardingStepProps<T>) {
@@ -154,9 +247,9 @@ function OnboardingStep<T extends ZodSchema>({
 
   // Skip is just `next` without the validation, or `onStepCompleted`
   const skip = useMemo(() => {
-    if (skippable === false) return undefined
-
-    return context.next
+    if (skippable && context.next) {
+      return () => context.next!(true)
+    }
   }, [skippable, context.next])
 
   const next = useMemo(() => {
@@ -170,6 +263,17 @@ function OnboardingStep<T extends ZodSchema>({
         if (isValid === false) return
       }
 
+      if (markAsCompleted) {
+        const computedMarkAsCompleted = await getComputedMarkAsCompleted(
+          markAsCompleted,
+          context.form.getValues()
+        )
+        if (computedMarkAsCompleted === false) {
+          onMarkAsCompletedFailed?.()
+          return
+        }
+      }
+
       onStepCompleted?.(context.form)
       context.next?.()
     }
@@ -181,6 +285,7 @@ function OnboardingStep<T extends ZodSchema>({
     skip,
     next,
     isCurrentStep: context.currentStepId === stepId,
+    isMarkedAsCompleted: context.completedStepIds.includes(stepId),
   })
 }
 

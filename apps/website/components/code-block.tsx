@@ -3,7 +3,7 @@
 import React, { useCallback, useState } from "react"
 import copy from "copy-to-clipboard"
 import { AnimatePresence, MotionConfig, motion } from "framer-motion"
-import { Highlight } from "prism-react-renderer"
+import { Highlight, type PrismTheme } from "prism-react-renderer"
 import useMeasure from "react-use-measure"
 import { twMerge } from "tailwind-merge"
 

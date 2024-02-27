@@ -29,12 +29,11 @@ export function OnboardingStepContainer({
   children,
   title,
   goto,
+  isMarkedAsCompleted,
 }: OnboardingStepRenderProps<typeof onboardingSchema> & {
   children: ReactNode
   title: string
 }) {
-  const [ref, bounds] = useMeasure()
-
   return (
     <div className="rounded-lg border border-gray-200 mt-2">
       <div
@@ -42,7 +41,7 @@ export function OnboardingStepContainer({
         onClick={() => goto(stepId)}
       >
         <AnimatePresence mode="popLayout">
-          {isCurrentStep && (
+          {isMarkedAsCompleted && (
             <motion.div
               variants={variants}
               key={"is-current-step"}
@@ -54,7 +53,7 @@ export function OnboardingStepContainer({
               <CheckCircleIconSolid className="w-4 h-4 mr-2" />
             </motion.div>
           )}
-          {isCurrentStep === false && (
+          {isMarkedAsCompleted === false && (
             <motion.div
               variants={variantsOut}
               key={"not-current-step"}
