@@ -15,42 +15,11 @@ import {
   OnboardingProps,
   OnboardingStepProps,
 } from "./types"
+import { childrenWithPropsArray, getComputedMarkAsCompleted } from "./utils"
 
 const OnboardingContext = createContext<OnboardingContextValue<any>>(
   {} as OnboardingContextValue<any>
 )
-
-// @todo(skoshx): move to utils
-
-function childrenWithPropsArray<T extends Record<string, any>>(
-  children: React.ReactNode
-) {
-  return Array.isArray(children)
-    ? (children as React.ReactElement<T>[])
-    : [children as React.ReactElement<T>]
-}
-
-async function getComputedMarkAsCompleted<T extends ZodSchema>(
-  markAsCompleted: Exclude<
-    OnboardingStepProps<T>["markAsCompleted"],
-    undefined
-  >,
-  formValues: z.infer<T>
-) {
-  let computedMarkAsCompleted = false
-  if (markAsCompleted === true || markAsCompleted === false) {
-    computedMarkAsCompleted = markAsCompleted
-  } else {
-    try {
-      computedMarkAsCompleted = await markAsCompleted(formValues)
-    } catch {}
-  }
-  return computedMarkAsCompleted
-}
-
-/* const childrenAsArray = (children: React.ReactNode) => {
-  return Array.isArray(children) ? children as React.ReactElement<T>[] : [children];
-} */
 
 function Onboarding<T extends ZodSchema>({
   schema,
