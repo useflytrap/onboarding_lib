@@ -1,10 +1,9 @@
 import * as React from "react"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm, useWatch } from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { ZodSchema, z } from "zod"
 
-import { Form } from "./form"
 import { useDebounce } from "./hooks"
 import {
   OnboardingContextValue,
@@ -27,8 +26,9 @@ function Onboarding<T extends ZodSchema>({
   onCompleted,
 }: OnboardingProps<T>) {
   const STEPS = Array.isArray(children)
-    ? children?.map((c) => c.props.id)
-    : [(children as React.ReactElement)?.props?.id]
+    ? children?.map((c) => c.props.stepId)
+    : [(children as React.ReactElement)?.props?.stepId]
+
   if (STEPS === undefined || STEPS.length === 0 || STEPS.at(0) === undefined) {
     throw new Error(
       `<Onboarding> expects at least one <Step> component as a direct child.`
@@ -36,7 +36,7 @@ function Onboarding<T extends ZodSchema>({
   }
 
   const [currentStep, setCurrentStep] = useState(0)
-  const [stepId, setStepId] = useState(STEPS[currentStep])
+  const [currentStepId, setStepId] = useState(STEPS[currentStep])
   const [hasLoaded, setHasLoaded] = useState(false)
 
   const form = useForm<z.infer<typeof schema>>({
@@ -87,7 +87,7 @@ function Onboarding<T extends ZodSchema>({
   }, [debouncedFormValues, hasLoaded])
 
   function onSubmit(data: z.infer<typeof schema>) {
-    onCompleted(data)
+    onCompleted?.(data)
   }
 
   function onInvalid(x: any) {
@@ -130,21 +130,21 @@ function Onboarding<T extends ZodSchema>({
         userId,
         id,
         form,
-        stepId,
+        currentStepId,
         onCompleted,
       }}
     >
-      <Form {...form}>
+      <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit, onInvalid)}>
           {children}
         </form>
-      </Form>
+      </FormProvider>
     </OnboardingContext.Provider>
   )
 }
 
 function OnboardingStep<T extends ZodSchema>({
-  id,
+  stepId,
   skippable = true,
   validateFormFields,
   onStepCompleted,
@@ -177,9 +177,10 @@ function OnboardingStep<T extends ZodSchema>({
 
   return render({
     ...context,
+    stepId,
     skip,
     next,
-    isCurrentStep: context.stepId === id,
+    isCurrentStep: context.currentStepId === stepId,
   })
 }
 
@@ -191,3 +192,5 @@ export function createOnboarding<T extends ZodSchema>({
     Step: OnboardingStep<T>,
   }
 }
+
+export * from "./types"

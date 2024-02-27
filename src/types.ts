@@ -13,7 +13,7 @@ export type OnboardingProps<T extends ZodSchema> = {
   defaultValues?: DefaultValues<z.infer<T>>
   children: ReactNode
   userId: string
-  onCompleted: (data: z.infer<T>) => void
+  onCompleted?: (data: z.infer<T>) => void
   /**
    * Amount of milliseconds to debounce before saving the values to the provided `Storage`.
    * @default 500 ms
@@ -29,22 +29,24 @@ export type OnboardingContextValue<T extends ZodSchema> = Omit<
   next?: () => void
   skip?: () => void
   goto: (stepId: string) => void
-  form: UseFormReturn<any, any, undefined>
-  stepId: string
+  form: UseFormReturn<any, any, any>
+  currentStepId: string
 }
 
 export type OnboardingStepRenderProps<T extends ZodSchema> =
   OnboardingContextValue<T> & {
+    stepId: string
     isCurrentStep: boolean
   }
 
 export type OnboardingStepProps<T extends ZodSchema> = {
-  id: string
+  stepId: string
   /**
    * Whether this step can be skipped.
    * @default true
    */
   skippable?: boolean
+  disabled?: boolean
   /**
    * Enable the validation of the form fields provided, when `next` is called. If no form fields are provided, validation won't happen until the final submit.
    */

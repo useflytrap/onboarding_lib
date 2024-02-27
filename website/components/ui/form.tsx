@@ -10,7 +10,8 @@ import {
   useFormContext,
 } from "react-hook-form"
 
-import { cn } from "./util"
+import { cn } from "@/lib/utils"
+import { Label } from "@/components/ui/label"
 
 const Form = FormProvider
 
@@ -90,13 +91,9 @@ const FormLabel = React.forwardRef<
   const { error, formItemId } = useFormField()
 
   return (
-    <LabelPrimitive.Label
+    <Label
       ref={ref}
-      className={cn(
-        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-        error && "text-red-400 dark:text-red-200",
-        className
-      )}
+      className={cn(error && "text-red-500 dark:text-red-900", className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -136,7 +133,10 @@ const FormDescription = React.forwardRef<
     <p
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-[0.8rem] text-gray-400", className)}
+      className={cn(
+        "text-[0.8rem] text-stone-500 dark:text-stone-400",
+        className
+      )}
       {...props}
     />
   )
@@ -158,7 +158,10 @@ const FormMessage = React.forwardRef<
     <p
       ref={ref}
       id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-red-400", className)}
+      className={cn(
+        "text-[0.8rem] font-medium text-red-500 dark:text-red-900",
+        className
+      )}
       {...props}
     >
       {body}
