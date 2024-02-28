@@ -35,7 +35,7 @@
 		"test:coverage": "vitest run --coverage",
 		"lint": "pnpm eslint --fix \"{src,test}/**/*.{js,json,ts}\"",
 		"prepublishOnly": "pnpm lint && pnpm test",
-		"release": "np --preview"
+		"release": "np --preview --no-tests"
 	},
 	"dependencies": {
 		"@hookform/resolvers": "^3.3.4",
