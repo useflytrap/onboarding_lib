@@ -2,7 +2,7 @@ import { ReactNode } from "react"
 import { CheckCircleIcon } from "@heroicons/react/24/outline"
 import { CheckCircleIcon as CheckCircleIconSolid } from "@heroicons/react/24/solid"
 import { AnimatePresence, motion } from "framer-motion"
-import type { OnboardingStepRenderProps } from "onboarding-lib"
+import type { OnboardingStepRenderProps } from "onboarding_lib"
 
 import { Button } from "@/components/ui/button"
 import { Subtitle } from "@/components/subtitle"

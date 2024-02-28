@@ -1,4 +1,4 @@
-import type { OnboardingStepRenderProps } from "onboarding-lib"
+import type { OnboardingStepRenderProps } from "onboarding_lib"
 
 import { CodeBlock } from "@/components/code-block"
 import { Subtitle } from "@/components/subtitle"

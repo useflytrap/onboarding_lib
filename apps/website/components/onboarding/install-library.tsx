@@ -1,4 +1,4 @@
-import type { OnboardingStepRenderProps } from "onboarding-lib"
+import type { OnboardingStepRenderProps } from "onboarding_lib"
 
 import { CodeBlock } from "../code-block"
 import { onboardingSchema } from "../demo"
@@ -11,9 +11,9 @@ export function InstallLibraryStep(
     <OnboardingStepContainer title="Install ONBOARDING_LIB" {...props}>
       <CodeBlock
         copyFromAnywhere={true}
-        copyContent="npm install onboarding-lib"
+        copyContent="npm install onboarding_lib"
       >
-        $ npm install onboarding-lib
+        $ npm install onboarding_lib
       </CodeBlock>
     </OnboardingStepContainer>
   )

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { createOnboarding } from "onboarding-lib"
+import { createOnboarding } from "onboarding_lib"
 import { createStorage } from "unstorage"
 import localStorageDriver from "unstorage/drivers/localstorage"
 import { z } from "zod"

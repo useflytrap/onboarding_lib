@@ -1,33 +1,10 @@
 {
-	"name": "onboarding-lib",
+	"name": "root",
 	"version": "0.0.1",
-	"description": "An onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
-	"repository": "useflytrap/onboarding-lib",
-	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"import": "./dist/index.mjs",
-			"require": "./dist/index.cjs"
-		}
-	},
-	"main": "./dist/index.cjs",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.ts",
-	"files": [
-		"dist"
-	],
+	"description": "A tiny headless onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
+	"repository": "useflytrap/onboarding_lib",
 	"author": "Rasmus <rasmus@useflytrap.com>",
 	"license": "MIT",
-	"type": "module",
-	"keywords": [
-		"typescript",
-		"human-friendly",
-		"logs",
-		"api",
-		"error",
-		"logging",
-		"error-handling"
-	],
 	"scripts": {
 		"dev": "turbo dev",
 		"build": "turbo build",

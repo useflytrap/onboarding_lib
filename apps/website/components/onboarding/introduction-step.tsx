@@ -1,5 +1,5 @@
 import * as React from "react"
-import { type OnboardingStepRenderProps } from "onboarding-lib"
+import { type OnboardingStepRenderProps } from "onboarding_lib"
 
 import { ExternalLink } from "@/components/external-link"
 import { Subtitle } from "@/components/subtitle"
