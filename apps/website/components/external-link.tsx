@@ -7,7 +7,7 @@ export function ExternalLink(
     <Link
       href={props.href as string}
       target="_blank"
-      className="text-purple-500 underline underline-offset-2"
+      className="text-[#FFC53D] underline underline-offset-2"
     >
       {props.children}
     </Link>
