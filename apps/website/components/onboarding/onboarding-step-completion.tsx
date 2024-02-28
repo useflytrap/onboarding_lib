@@ -1,14 +1,5 @@
-import {
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  type OnboardingStepRenderProps,
-} from "onboarding-lib"
+import type { OnboardingStepRenderProps } from "onboarding-lib"
 
-import { Input } from "@/components/input"
 import { Subtitle } from "@/components/subtitle"
 
 import { CodeBlock } from "../code-block"

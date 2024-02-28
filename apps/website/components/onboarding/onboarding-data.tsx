@@ -11,12 +11,6 @@ export function OnboardingDataStep(
 ) {
   return (
     <OnboardingStepContainer title="View your onboarding data" {...props}>
-      <CodeBlock
-        copyFromAnywhere={true}
-        copyContent="npm install onboarding-lib"
-      >
-        $ npm install onboarding-lib
-      </CodeBlock>
       <Subtitle>Here is your onboarding data</Subtitle>
       <CodeBlock>{JSON.stringify(props.form.getValues(), null, 2)}</CodeBlock>
     </OnboardingStepContainer>

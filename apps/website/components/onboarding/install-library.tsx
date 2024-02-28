@@ -8,7 +8,7 @@ export function InstallLibraryStep(
   props: OnboardingStepRenderProps<typeof onboardingSchema>
 ) {
   return (
-    <OnboardingStepContainer title="Install onboarding-lib" {...props}>
+    <OnboardingStepContainer title="Install ONBOARDING_LIB" {...props}>
       <CodeBlock
         copyFromAnywhere={true}
         copyContent="npm install onboarding-lib"

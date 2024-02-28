@@ -47,22 +47,44 @@ export type OnboardingStepRenderProps<T extends ZodSchema> =
   }
 
 export type OnboardingStepProps<T extends ZodSchema> = {
+  /**
+   * The ID of this step. Should be unique.
+   */
   stepId: string
+  /**
+   * The `markAsCompleted` value can be used to simply mark the step as completed, but can also
+   * be used to for instance run side-effects, and proceed only when those have succeeded. If you return
+   * `false`, the `onMarkAsCompletedFailed` function will be called.
+   */
   markAsCompleted?:
     | ((data: z.infer<T>) => Promise<boolean>)
     | ((data: z.infer<T>) => boolean)
     | boolean
+  /**
+   * This function will get called, when the user is trying to proceed to the next step (by calling the
+   * `next` function), but the `markAsCompleted` returns false for this step.
+   */
   onMarkAsCompletedFailed?: () => void
   /**
-   * Whether this step can be skipped.
+   * Whether this step can be skipped. If set to `false`, the value of the `skip` prop will be `undefined`.
    * @default true
    */
   skippable?: boolean
+  /**
+   * Whether this step should be marked as disabled. This value doesn't actually do anything at the moment.
+   */
   disabled?: boolean
   /**
    * Enable the validation of the form fields provided, when `next` is called. If no form fields are provided, validation won't happen until the final submit.
    */
   validateFormFields?: (keyof z.infer<T>)[]
-  onStepCompleted?: (data: any) => void | Promise<void>
+  /**
+   * Run code when this step has completed. Useful for tracking onboarding conversion rates using product analytics tools.
+   */
+  onStepCompleted?: (data: z.infer<T>) => void | Promise<void>
+  /**
+   * The function that will be called to render your onboarding step component.
+   * @returns A React component
+   */
   render: (values: OnboardingStepRenderProps<T>) => ReactNode
 }

@@ -35,7 +35,7 @@ export function OnboardingStepContainer({
   title: string
 }) {
   return (
-    <div className="rounded-lg border border-gray-200 mt-2">
+    <div className="rounded-xl border border-gray-200 mt-2">
       <div
         className="flex items-center p-4 cursor-pointer"
         onClick={() => goto(stepId)}
@@ -70,12 +70,12 @@ export function OnboardingStepContainer({
       </div>
 
       <motion.div
-        initial={{ opacity: 0, height: "16px" }}
+        initial={{ opacity: 0, height: "0" }}
         animate={{
           opacity: isCurrentStep ? 1 : 0,
-          height: isCurrentStep ? "auto" : "16px",
+          height: isCurrentStep ? "auto" : "0",
         }}
-        transition={{ type: "spring" }}
+        transition={{ type: "spring", stiffness: 700, damping: 60 }}
         className="overflow-hidden"
       >
         <div className="p-4 space-y-4">

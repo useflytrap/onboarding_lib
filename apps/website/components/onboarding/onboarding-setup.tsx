@@ -1,6 +1,5 @@
 import { type OnboardingStepRenderProps } from "onboarding-lib"
 
-import { Input } from "@/components/input"
 import { Subtitle } from "@/components/subtitle"
 
 import { CodeBlock } from "../code-block"
@@ -8,59 +7,49 @@ import { onboardingSchema } from "../demo"
 import { OnboardingStepContainer } from "./onboarding-step"
 
 const onboardingZodSchemaCode = `/**
- * Onboarding for taking the user through how the library works?
- */
+* This is the schema that will be used by \`react-hook-form\`. You can use it to define error messages, etc.
+* all very intuitively.
+*/
 export const onboardingSchema = z.object({
-})
-`
-
-const onboardingWithShadcnComponent = `export function LibraryAnatomyStep({ form }: OnboardingStepRenderProps<typeof onboardingSchema>) {
-	return (
-		<FormField
-			control={props.form.control}
-			name="companySize"
-			render={({ field }) => (
-				<FormItem>
-					<FormLabel>Company size</FormLabel>
-					<FormControl>
-						<Input placeholder="shadcn" {...field} />
-					</FormControl>
-					<FormDescription>
-						How many employees are you?
-					</FormDescription>
-					<FormMessage />
-				</FormItem>
-			)}
-		/>
-	)
-}
-`
+ disappointment: z.enum(
+   ["very-disappointed", "somewhat-disappointed", "not-disappointed"],
+   { required_error: "Please fill in your disappointment level :)" }
+ ),
+ improvements: z.string({
+   required_error: "Please help us improve ONBOARDING_LIB for you :)",
+ }),
+})`
 
 const createOnboardingCode = `const { Onboarding, Step } = createOnboarding({
   schema: onboardingSchema,
 })
 
 return (
-  <section>
-    <Onboarding
-      id="onboarding-demo"
-      storage={storage}
-      schema={onboardingSchema}
-      userId="user-id"
-      onCompleted={() => {
-        console.log("Completed")
-      }}
-    >
-      <Step stepId="install-library" render={InstallLibraryStep} />
-      <Step stepId="onboarding-setup" render={OnboardingSetupStep} />
-      <Step
-        validateFormFields={["companySize"]}
-        stepId="setup-demo"
-        render={SetupDemoStep}
-      />
-      <Step stepId="onboarding-data" render={OnboardingDataStep} />
-    </Onboarding>
-  </section>
+  <Onboarding
+    id="onboarding-demo"
+    storage={storage}
+    schema={onboardingSchema}
+    userId="user-id"
+    onCompleted={() => {
+      console.log("Completed")
+    }}
+  >
+    <Step stepId="introduction" render={IntroductionStep} />
+    <Step stepId="install-library" render={InstallLibraryStep} />
+    <Step stepId="onboarding-setup" render={OnboardingSetupStep} />
+    <Step
+      validateFormFields={["stack", "language"]}
+      stepId="setup-demo"
+      render={SetupDemoStep}
+    />
+    <Step stepId="step-complete" render={OnboardingStepCompletionStep} />
+    <Step
+      validateFormFields={["disappointment", "improvements"]}
+      stepId="feedback"
+      render={GiveFeedbackStep}
+    />
+    <Step stepId="onboarding-data" render={OnboardingDataStep} />
+  </Onboarding>
 )
 `
 
@@ -89,17 +78,10 @@ export function OnboardingSetupStep(
         </p>
       </div>
       <CodeBlock>{createOnboardingCode}</CodeBlock>
-
-      <div>
-        <Subtitle>Gather onboarding data</Subtitle>
-        <p className="text-gray-500">
-          Next up, use the `react-hook-form` form control to bind to an input
-          element to request details from our onboarding user. Here we&apos;re
-          using Shadcn UI Form components.
-        </p>
-      </div>
-
-      <CodeBlock>{onboardingWithShadcnComponent}</CodeBlock>
+      <p className="text-gray-500">
+        As you can see, the above code is the code used by this very onboarding
+        flow. Let&apos;s dive deeper into how to define steps.
+      </p>
     </OnboardingStepContainer>
   )
 }
