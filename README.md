@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://github.com/skoshx/human-logs/raw/main/docs/human-logs-logo.jpg" />
+	<img src="https://github.com/useflytrap/onboarding_lib/raw/main/docs/onboarding-lib-banner.jpg" />
 </p>
 
 # ONBOARDING_LIB
