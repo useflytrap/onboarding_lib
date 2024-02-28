@@ -1,5 +1,5 @@
 <p align="center">
-	<img src="https://github.com/useflytrap/onboarding_lib/raw/main/docs/onboarding-lib-banner.jpg" />
+	<img src="https://github.com/useflytrap/onboarding_lib/raw/main/docs/onboarding-lib-banner.png" />
 </p>
 
 # ONBOARDING_LIB
