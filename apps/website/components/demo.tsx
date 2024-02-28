@@ -69,6 +69,7 @@ export function Demo() {
       <Step
         validateFormFields={["disappointment", "improvements"]}
         stepId="feedback"
+        skippable={false}
         render={GiveFeedbackStep}
       />
       <Step stepId="onboarding-data" render={OnboardingDataStep} />

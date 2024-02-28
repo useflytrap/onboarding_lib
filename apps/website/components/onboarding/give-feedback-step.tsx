@@ -15,7 +15,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { CodeBlock } from "@/components/code-block"
 import { onboardingSchema } from "@/components/demo"
 import { OnboardingStepContainer } from "@/components/onboarding/onboarding-step"
 import { Subtitle } from "@/components/subtitle"

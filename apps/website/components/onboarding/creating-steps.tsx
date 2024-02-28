@@ -132,9 +132,9 @@ export function CreatingStepsStep(
         <Subtitle>Running side-effects / marking a step as completed</Subtitle>
         <p className="text-gray-500">
           For marking a step as completed, or optionally running side-effects
-          before letting the user continue, the `markStepAsCompleted` prop can
-          be used. Your onboarding form data will get passed to the function,
-          and you can use it to run async side-effects, or just validate the
+          before letting the user continue, the `markAsCompleted` prop can be
+          used. Your onboarding form data will get passed to the function, and
+          you can use it to run async side-effects, or just validate the
           existance of form data.
           <br />
           In the below example, the step only gets marked as completed, once the

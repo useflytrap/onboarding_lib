@@ -22,14 +22,14 @@ export function IntroductionStep(
       </div>
 
       <div>
-        <Subtitle>Persistance using Unstorage</Subtitle>
+        <Subtitle>Persistance using unstorage</Subtitle>
         <p className="text-gray-500">
           We use the great{" "}
           <ExternalLink href="https://unstorage.unjs.io/">
             unstorage
           </ExternalLink>{" "}
           library from UnJS to handle persistance. This allows you to easily
-          save your end-users&apos; onboarding data on any drivers such as
+          save your end-users&apos; onboarding data on any driver such as
           LocalStorage, Redis, Netlify Blobs, Memory or the filesystem. See all
           of the supported drivers{" "}
           <ExternalLink href="https://unstorage.unjs.io/drivers">

@@ -6,14 +6,7 @@ import { CodeBlock } from "../code-block"
 import { onboardingSchema } from "../demo"
 import { OnboardingStepContainer } from "./onboarding-step"
 
-const onboardingZodSchemaCode = `/**
- * Onboarding for taking the user through how the library works?
- */
-export const onboardingSchema = z.object({
-})
-`
-
-const onboardingWithShadcnComponent = `export function Onboarding() {
+const stepWithOnCompletedCode = `export function Onboarding() {
 	return (
 		<Onboarding
       id="onboarding-demo"
@@ -29,13 +22,12 @@ const onboardingWithShadcnComponent = `export function Onboarding() {
 				stepId="setup-demo"
 				render={SetupDemoStep}
 				onStepCompleted={(data) => {
-					// Track analytics
+					// Track analytics etc.
 				}}
 			/>
 		</Onboarding>
 	)
-}
-`
+}`
 
 export function OnboardingStepCompletionStep(
   props: OnboardingStepRenderProps<typeof onboardingSchema>
@@ -46,17 +38,15 @@ export function OnboardingStepCompletionStep(
       {...props}
     >
       <div>
-        <Subtitle>Define your form data with Zod</Subtitle>
+        <Subtitle>Define your step completion handler</Subtitle>
         <p className="text-gray-500">
           To create conversion funnels for your onboarding flows, you can use
           the `onStepCompleted` prop as shown below. If the step has
           `validateFormFields` values, those will be validated upon calling the
           `next` function, after which the callback will be called.
-          <br />
-          <br />
         </p>
       </div>
-      <CodeBlock>{onboardingZodSchemaCode}</CodeBlock>
+      <CodeBlock>{stepWithOnCompletedCode}</CodeBlock>
     </OnboardingStepContainer>
   )
 }
