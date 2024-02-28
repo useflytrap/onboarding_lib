@@ -1,9 +1,8 @@
-import { ReactNode, useCallback, useEffect, useState } from "react"
+import { ReactNode } from "react"
 import { CheckCircleIcon } from "@heroicons/react/24/outline"
 import { CheckCircleIcon as CheckCircleIconSolid } from "@heroicons/react/24/solid"
 import { AnimatePresence, motion } from "framer-motion"
 import type { OnboardingStepRenderProps } from "onboarding-lib"
-import useMeasure from "react-use-measure"
 
 import { Button } from "@/components/ui/button"
 import { Subtitle } from "@/components/subtitle"
@@ -87,7 +86,7 @@ export function OnboardingStepContainer({
               </Button>
             )}
             {next && (
-              <Button type="button" onClick={next}>
+              <Button type="button" onClick={() => next()}>
                 Next
               </Button>
             )}
