@@ -14,6 +14,10 @@ A good onboarding flow is one of the best ways to guide a new user to see the va
 
 We built ONBOARDING_LIB to make building such onboarding flows dead simple. ONBOARDING_LIB takes care of persisting your onboarding state, handling form validation & side-effects in an intuitive way so that you can build your onboarding flow with ease.
 
+## Demo
+
+Check out a live onboarding demo built with ONBOARDING_LIB that walks you through creating an onboarding flow [here.](https://onboarding-lib.vercel.app/)
+
 ## Features
 
 - Headless
