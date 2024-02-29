@@ -111,7 +111,13 @@ export function Demo() {
           })
         }}
       />
-      <Step stepId="onboarding-data" render={OnboardingDataStep} />
+      <Step
+        stepId="onboarding-data"
+        render={OnboardingDataStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_onboarding_data")
+        }}
+      />
       <Step stepId="thank-you" render={ThankYouStep} />
     </Onboarding>
   )
