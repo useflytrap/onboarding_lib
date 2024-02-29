@@ -64,7 +64,7 @@ export type OnboardingStepProps<T extends ZodSchema> = {
    * This function will get called, when the user is trying to proceed to the next step (by calling the
    * `next` function), but the `markAsCompleted` returns false for this step.
    */
-  onMarkAsCompletedFailed?: () => void
+  onMarkAsCompletedFailed?: (data: z.infer<T>) => void
   /**
    * Whether this step can be skipped. If set to `false`, the value of the `skip` prop will be `undefined`.
    * @default true

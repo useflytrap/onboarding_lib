@@ -1,12 +1,7 @@
 import * as React from "react"
 import { createContext, useContext, useEffect, useMemo, useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import {
-  FormProvider,
-  SubmitErrorHandler,
-  useForm,
-  useWatch,
-} from "react-hook-form"
+import { FormProvider, useForm, useWatch } from "react-hook-form"
 import { ZodSchema, z } from "zod"
 
 import { useDebounce } from "./hooks"
@@ -238,12 +233,12 @@ function OnboardingStep<T extends ZodSchema>({
           context.form.getValues()
         )
         if (computedMarkAsCompleted === false) {
-          onMarkAsCompletedFailed?.()
+          onMarkAsCompletedFailed?.(context.form.getValues())
           return
         }
       }
 
-      onStepCompleted?.(context.form)
+      onStepCompleted?.(context.form.getValues())
       context.next?.()
     }
   }, [context.next])

@@ -61,6 +61,9 @@ export function Demo() {
       onCompleted={() => {
         console.log("Completed")
       }}
+      defaultValues={{
+        improvements: "",
+      }}
     >
       <Step
         stepId="introduction"
