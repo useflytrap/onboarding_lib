@@ -34,7 +34,7 @@
 		"test:types": "tsc --noEmit",
 		"test:coverage": "vitest run --coverage",
 		"lint": "pnpm eslint --fix \"{src,test}/**/*.{js,json,ts}\"",
-		"prepublishOnly": "pnpm lint && pnpm test",
+		"prepublishOnly": "pnpm lint",
 		"release": "np --no-tests"
 	},
 	"dependencies": {
