@@ -6,6 +6,7 @@ import { createStorage } from "unstorage"
 import localStorageDriver from "unstorage/drivers/localstorage"
 import { z } from "zod"
 
+import { trackEvent } from "@/lib/analytics"
 import { OnboardingSkeleton } from "@/components/onboarding-skeleton"
 import { CreatingStepsStep } from "@/components/onboarding/creating-steps"
 import { GiveFeedbackStep } from "@/components/onboarding/give-feedback-step"
@@ -61,16 +62,54 @@ export function Demo() {
         console.log("Completed")
       }}
     >
-      <Step stepId="introduction" render={IntroductionStep} />
-      <Step stepId="install-library" render={InstallLibraryStep} />
-      <Step stepId="onboarding-setup" render={OnboardingSetupStep} />
-      <Step stepId="creating-steps" render={CreatingStepsStep} />
-      <Step stepId="on-complete" render={OnboardingStepCompletionStep} />
+      <Step
+        stepId="introduction"
+        render={IntroductionStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_introduction")
+        }}
+      />
+      <Step
+        stepId="install-library"
+        render={InstallLibraryStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_installation")
+        }}
+      />
+      <Step
+        stepId="onboarding-setup"
+        render={OnboardingSetupStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_setup")
+        }}
+      />
+      <Step
+        stepId="creating-steps"
+        render={CreatingStepsStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_creating_steps")
+        }}
+      />
+      <Step
+        stepId="on-complete"
+        render={OnboardingStepCompletionStep}
+        onStepCompleted={() => {
+          trackEvent("onboarding:complete_on_complete")
+        }}
+      />
       <Step
         validateFormFields={["disappointment", "improvements"]}
         stepId="feedback"
         skippable={false}
         render={GiveFeedbackStep}
+        onStepCompleted={({ disappointment, improvements }) => {
+          trackEvent("onboarding:complete_feedback")
+          trackEvent("onboarding:submit_feedback", {
+            $set: { disappointment, improvements },
+            disappointment,
+            improvements,
+          })
+        }}
       />
       <Step stepId="onboarding-data" render={OnboardingDataStep} />
       <Step stepId="thank-you" render={ThankYouStep} />
