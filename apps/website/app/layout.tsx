@@ -9,9 +9,9 @@ import { Footer } from "@/components/footer"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Onboarding Lib",
+  title: "ONBOARDING_LIB",
   description:
-    "Onboarding Lib is a tiny onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
+    "ONBOARDING_LIB is a tiny headless onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
 }
 
 export default function RootLayout({
