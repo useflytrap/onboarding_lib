@@ -1,6 +1,6 @@
 {
 	"name": "onboarding_lib",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "A tiny headless onboarding library with form validation, schema validation using Zod and persistance with unstorage.",
 	"repository": "useflytrap/onboarding_lib",
 	"exports": {
