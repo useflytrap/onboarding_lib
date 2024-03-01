@@ -34,7 +34,7 @@ export type OnboardingContextValue<T extends ZodSchema> = Omit<
   next?: (skipped?: boolean) => void
   skip?: () => void
   goto: (stepId: string) => void
-  form: UseFormReturn<any, any, any>
+  form: UseFormReturn<z.infer<T>, any, z.infer<T>>
   currentStepId: string
   completedStepIds: string[]
 }
