@@ -86,5 +86,5 @@ export type OnboardingStepProps<T extends ZodSchema> = {
    * The function that will be called to render your onboarding step component.
    * @returns A React component
    */
-  render: (values: OnboardingStepRenderProps<T>) => ReactNode
+  render: (values: OnboardingStepRenderProps<T>) => React.JSX.Element
 }
