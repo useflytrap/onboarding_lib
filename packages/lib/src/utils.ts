@@ -28,3 +28,7 @@ export async function getComputedMarkAsCompleted<T extends ZodSchema>(
   }
   return computedMarkAsCompleted
 }
+
+export function createStoragePrefixFn(onboardingId: string, userId: string) {
+  return (storageKey: string) => `${onboardingId}:${userId}:${storageKey}`
+}

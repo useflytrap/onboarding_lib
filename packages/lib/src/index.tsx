@@ -10,7 +10,11 @@ import {
   OnboardingProps,
   OnboardingStepProps,
 } from "./types"
-import { childrenWithPropsArray, getComputedMarkAsCompleted } from "./utils"
+import {
+  childrenWithPropsArray,
+  createStoragePrefixFn,
+  getComputedMarkAsCompleted,
+} from "./utils"
 
 const OnboardingContext = createContext<OnboardingContextValue<any>>(
   {} as OnboardingContextValue<any>
@@ -47,28 +51,36 @@ function Onboarding<T extends ZodSchema>({
     defaultValues,
   })
 
+  const withStoragePrefix = createStoragePrefixFn(id, userId)
+
   useEffect(() => {
     setStepId(STEPS[currentStep])
   }, [currentStep])
 
   useEffect(() => {
     if (hasLoaded) {
-      storage.setItem(`${userId}:step`, currentStep)
+      storage.setItem(withStoragePrefix("step"), currentStep)
     }
   }, [currentStep, hasLoaded])
 
   useEffect(() => {
     if (hasLoaded) {
-      storage.setItem(`${userId}:completed_marks`, completedStepIds)
+      storage.setItem(withStoragePrefix("completed_marks"), completedStepIds)
     }
   }, [completedStepIds, hasLoaded])
 
   useEffect(() => {
     async function fetchOnboardingState() {
-      const formValues = await storage.getItem<Record<string, any>>(userId)
-      const currentStep = await storage.getItem<number>(`${userId}:step`)
+      const formValues = await storage.getItem<Record<string, any>>(
+        withStoragePrefix("form")
+      )
+      const currentStep = await storage.getItem<number>(
+        withStoragePrefix("step")
+      )
       let completedMarks =
-        (await storage.getItem<string[]>(`${userId}:completed_marks`)) ?? []
+        (await storage.getItem<string[]>(
+          withStoragePrefix("completed_marks")
+        )) ?? []
       if (formValues) {
         for (const [key, value] of Object.entries(formValues)) {
           // @ts-expect-error
@@ -132,7 +144,7 @@ function Onboarding<T extends ZodSchema>({
 
   useEffect(() => {
     if (hasLoaded) {
-      storage.setItem(userId, debouncedFormValues)
+      storage.setItem(withStoragePrefix("form"), debouncedFormValues)
     }
   }, [debouncedFormValues, hasLoaded])
 
